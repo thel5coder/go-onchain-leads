@@ -18,3 +18,7 @@ type BlockchainReader interface {
 type IdentityResolver interface {
 	ResolveIdentity(walletAddress string) domain.Identity
 }
+
+type LeadSaver interface {
+	SaveLead(lead domain.Lead) error
+}

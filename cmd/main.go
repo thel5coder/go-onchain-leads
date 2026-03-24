@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/wealdtech/go-ens/v3"
 	"go-onchain-leads/internal/domain"
+	"go-onchain-leads/internal/storage"
 	"go-onchain-leads/internal/usecase/leadscanner"
 	"log"
 )
@@ -51,6 +52,7 @@ func main() {
 	}
 
 	ensResolver := &EthereumNameService{client: client}
-	scannerService := leadscanner.NewLeadScanner(client, ensResolver)
+	csvSaver := storage.NewCSVSaver("premium_web3_leads.csv")
+	scannerService := leadscanner.NewLeadScanner(client, ensResolver, csvSaver)
 	scannerService.StartScanning()
 }

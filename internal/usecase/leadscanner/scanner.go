@@ -13,12 +13,14 @@ import (
 type LeadScanner struct {
 	reader   BlockchainReader
 	resolver IdentityResolver
+	saver    LeadSaver
 }
 
-func NewLeadScanner(r BlockchainReader, id IdentityResolver) *LeadScanner {
+func NewLeadScanner(r BlockchainReader, id IdentityResolver, s LeadSaver) *LeadScanner {
 	return &LeadScanner{
 		reader:   r,
 		resolver: id,
+		saver:    s,
 	}
 }
 
@@ -95,6 +97,11 @@ func (s *LeadScanner) StartScanning() {
 						fmt.Printf("Developer Wallet: %s\n", lead.DeveloperWallet)
 						fmt.Printf("Gas Spent:        %d units\n", lead.GasUsed)
 						fmt.Println("---------------------------------------------------")
+
+						err = s.saver.SaveLead(lead)
+						if err != nil {
+							log.Printf("⚠️ Failed to save lead: %v\n", err)
+						}
 					}
 				}
 			}
